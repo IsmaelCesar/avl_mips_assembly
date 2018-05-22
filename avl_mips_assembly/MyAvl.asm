@@ -465,13 +465,13 @@ posOrdem:
 	addi $sp, $sp, -8 #Dis espacos um para o endereco de retorno e outro para o endereco do node
 	sw $ra, 0($sp)
 	sw $a1, 4($sp) 	#Gravando endereco de  memória na pilha
-	lw $t0, 28($a1) #pegando o endereco do filho a direita
-	beq $t0, 0, poFEsq # se o filho mais a direita for nulo dá um branch para verificar o filho mais a esquerda
+	lw $t0, 24($a1) #pegando o endereco do filho a esquerda
+	beq $t0, 0, poFDir # se o filho mais a direita for nulo dá um branch para verificar o filho mais a esquerda
 		addi $a1, $t0,0 #salva o endereco guardado em $t0 em $a0
 		jal posOrdem	#faz uma chamada recursiva 
-poFEsq:	  
+poFDir:	  
 	lw $a1, 4($sp) #carregando o endereco salvo na pilha
-	lw $t0, 24($a1) #carregando o endereco do filho mais a esquerda
+	lw $t0, 28($a1) #carregando o endereco do filho mais a direita
 	beq $t0, 0, imprimirValor #Se for nulo, imprime o valor
 		addi $a1, $t0, 0 
 		jal posOrdem
