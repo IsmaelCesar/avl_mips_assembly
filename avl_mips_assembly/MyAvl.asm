@@ -10,8 +10,8 @@ bufferValor: .space 4 #alocando espaco para o valor
 #Arquivos ==============================================================
 buffer: .space 8
 espaco: .asciiz " "
-fin: .asciiz "../AvlAssembly/tree.in"
-fout: .asciiz "../AvlAssembly/tree.out"
+fin: .asciiz "tree.in"
+fout: .asciiz "tree.out"
 .text
 	#Abrindo Arquivo
 	li $v0, 13
