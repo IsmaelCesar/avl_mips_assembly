@@ -560,3 +560,32 @@ endConv:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
+#O procedimento armazena os valores em um arquibo com formato dat
+#$a2 -> Guardara o valor a ser convertido
+#$a1 -> O endereco do buffer o qual será usado para armazenar a cadeia
+escreverDatValues:
+	addi $sp,$sp,-4
+	sw $ra,0($sp)
+	
+	la $a1, bufferValor
+	sw $a2,0(bufferValor)
+	
+	li $v0, 15
+	addi $a0, $s7, 0  #Carregando descritor de arquivo do registrador
+	la $a1, bufferValor
+	li $a2,4	  #falando a quantidade de bytes
+	syscall
+	
+	li $v0, 15
+	addi $a0, $s7, 0  #Carregando descritor de arquivo do registrador
+	lh $a1, 0    #carregando o valor que eu quero escrever em arquivo	
+	li $a2, 2	  #falando a quantidade de bytes
+	syscall
+	
+	addi $t3, $zero, 0 #zerando o registrador $t3
+	
+	sw $zero, bufferValor
+	
+	lw $ra, 0($sp)
+	addi $sp, $sp, 4
+	jr $ra
