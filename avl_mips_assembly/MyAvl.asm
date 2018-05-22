@@ -88,7 +88,7 @@ endInserindoValores:
 	
 	lw $a1, TreeRoot #carregando o endereco salvo na raiz da arvore
 	addi $t0,$zero, 0 #zerando $t0
-	jal posOrdem
+	jal buscaOrdem
 
 	li $v0, 16
 	addi $a0, $s7, 0
@@ -494,7 +494,7 @@ buscaOrdem:
 	sw $a1,4($sp)    #salvando o endereco do node pilha
 	addi $t0,$a1,0 #carregando o endereco do node raiz
 	lw $t1, 24($a1) #carregando valo do filho mais a esquerda
-	beq $t1, 0,saiFilhoEsq #Se o filho mais a direita for nulo vá praa o node pai
+	beq $t1, 0,saiFilhoEsq #Se o filho mais a esquerda for nulo vá praa o node pai
 		move $a1,$t1   #passando o endereco do filho mais a esquerda para $a1
 		jal buscaOrdem
 	saiFilhoEsq:
@@ -502,20 +502,15 @@ buscaOrdem:
 		lw $t0,4($sp)#carregando o endereco do node no registrador t0
 		lw $a2,0($t0)#Carregando o valor salvo no node
 		jal escreverValor
+	
 	lw $t0,4($sp)	#carregando o endereco do node no registrador $t0
+	lw $s1,28($t0)  #caregando endereco do vilho mais a direita
 	lw $t1,0($t0)   #carregand o valor salvo no node em $t1
-
 	beq $t1,0, saiFilhoDir #Se o filho da direita for nulo 
 		move $a1,$t1 #passando o endereco do filho mais a esquerda para $a1
+		jal escreverValor
 	saiFilhoDir:
-		
-	lw $t0,4($sp)	#Carregando o endereco do node salvo na pilha em $t0 novamente por garantia
-	lw $t1,28($t0)  #Carregando o valor do endereco de memória do filho mais a esquerda
-	beq $t1,0,filhoDirNulo #Se o filho mais a direita for nulo 
-		addi $a1,$t1,0 #Senão passa o endereço do filho mais a direita
-		jal buscaOrdem
-	filhoDirNulo:		
-	
+				
 	lw $ra,0($sp)
 	addi $sp,$sp,8
 	jr $ra
