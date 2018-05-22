@@ -88,7 +88,7 @@ endInserindoValores:
 	
 	lw $a1, TreeRoot #carregando o endereco salvo na raiz da arvore
 	addi $t0,$zero, 0 #zerando $t0
-	jal buscaOrdem
+	jal posOrdem
 
 	li $v0, 16
 	addi $a0, $s7, 0
@@ -480,7 +480,7 @@ imprimirValor:
 	lw $t0, 0($s1) #Carregando o valor do node em $t0
 	
 	addi $a2, $t0, 0
-	jal escreverValor
+	jal escreverDatValues
 			
 	lw $ra, 0($sp)
 	addi $sp, $sp, 8
@@ -501,14 +501,14 @@ buscaOrdem:
 		
 		lw $t0,4($sp)#carregando o endereco do node no registrador t0
 		lw $a2,0($t0)#Carregando o valor salvo no node
-		jal escreverValor
+		jal escreverDatValues
 	
 	lw $t0,4($sp)	#carregando o endereco do node no registrador $t0
 	lw $s1,28($t0)  #caregando endereco do vilho mais a direita
 	lw $t1,0($t0)   #carregand o valor salvo no node em $t1
 	beq $t1,0, saiFilhoDir #Se o filho da direita for nulo 
 		move $a1,$t1 #passando o endereco do filho mais a esquerda para $a1
-		jal escreverValor
+		jal escreverDatValues
 	saiFilhoDir:
 				
 	lw $ra,0($sp)
@@ -560,6 +560,7 @@ endConv:
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
 	jr $ra
+
 #O procedimento armazena os valores em um arquibo com formato dat
 #$a2 -> Guardara o valor a ser convertido
 #$a1 -> O endereco do buffer o qual será usado para armazenar a cadeia
@@ -567,8 +568,8 @@ escreverDatValues:
 	addi $sp,$sp,-4
 	sw $ra,0($sp)
 	
-	la $a1, bufferValor
-	sw $a2,0(bufferValor)
+	la $a1, bufferValor #carregando endereco do buffer
+	sw $a2,0($a1) #salvando o valor contido no registrado no buffer
 	
 	li $v0, 15
 	addi $a0, $s7, 0  #Carregando descritor de arquivo do registrador
@@ -576,15 +577,18 @@ escreverDatValues:
 	li $a2,4	  #falando a quantidade de bytes
 	syscall
 	
-	li $v0, 15
-	addi $a0, $s7, 0  #Carregando descritor de arquivo do registrador
-	lh $a1, 0    #carregando o valor que eu quero escrever em arquivo	
-	li $a2, 2	  #falando a quantidade de bytes
-	syscall
+	sw $zero,bufferValor #zerando valores do buffer
+	
+	#escrevendo 0x0000
+	#li $v0, 15
+	#addi $a0, $s7, 0  #Carregando descritor de arquivo do registrador
+	#la $a1, bufferValor    #carregando o valor que eu quero escrever em arquivo	
+	#li $a2, 0x01	  #falando a quantidade de bytes
+	#syscall
 	
 	addi $t3, $zero, 0 #zerando o registrador $t3
 	
-	sw $zero, bufferValor
+	#sw $zero, bufferValor
 	
 	lw $ra, 0($sp)
 	addi $sp, $sp, 4
